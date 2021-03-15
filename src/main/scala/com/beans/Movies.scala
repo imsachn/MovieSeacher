@@ -3,8 +3,8 @@ case class Movies(imdbTitleTd: String,title: String, originalTitle: String, year
 
 
   override def toString: String = {
-    "imdbTitleTd = " + imdbTitleTd + " , title = " + title + " ,director = " + director + " ,originalTitle = " + originalTitle +
-      " ,year = " + year + " ,reviewsFromUsers = " + reviewsFromUsers + " , country = " + country + " , votes = " + votes + " ,budget = " +
-      budget + " , duration " + duration + " ,language = " + language
+   " title: " + title + " ,director : " + director +
+      " ,publishedYear : " + datePublished + " ,userReview : " + reviewsFromUsers + " , country : " + country + " , genre : " + genre + " ,budget : " +
+      budget + " , duration " + duration + " ,language : " + language
   }
 }
