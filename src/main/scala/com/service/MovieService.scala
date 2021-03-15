@@ -16,8 +16,8 @@ class MovieService {
   }
 
   def generateReportTitles(directorName: String, fromYear: Int, toYear: Int) {
-    val movie = moviesDetails.filter(movie => {
-      movie.year >= fromYear && movie.year <= toYear && movie.director.equalsIgnoreCase(directorName)
+    val movie = moviesDetails.filter(movie => { movie.director.equalsIgnoreCase(directorName) &&
+      movie.year >= fromYear && movie.year <= toYear
     })
     if (movie == null || movie.isEmpty) {
       println("No match data found")
@@ -28,13 +28,13 @@ class MovieService {
 
   def generateReportOfEnglishMoviesWithUserReview(userReview: Int) {
     val movieReviewList = moviesDetails.filter(movie => {
-      movie.budget.toString.equalsIgnoreCase("english") && movie.reviewsFromUsers > userReview
-    })
-    val sortedMovieListBaseOnReview = movieReviewList sortWith (_.reviewsFromUsers > _.reviewsFromUsers)
-    if (sortedMovieListBaseOnReview == null || sortedMovieListBaseOnReview.isEmpty) {
+      movie.language.toString.toLowerCase().contains("english") && movie.reviewsFromUsers > userReview
+    }).sortBy(_.reviewsFromUsers).reverse
+    //val sortedMovieListBaseOnReview = movieReviewList sortWith (_.reviewsFromUsers > _.reviewsFromUsers)
+    if (movieReviewList == null || movieReviewList.isEmpty) {
       println("No match data found")
     } else {
-      sortedMovieListBaseOnReview.foreach(println)
+      movieReviewList.foreach(println)
     }
   }
 
@@ -45,6 +45,7 @@ class MovieService {
     if (budgetMovie.isEmpty) {
       println("No match data found")
     } else {
+
       println(budgetMovie.reduceLeft(maxBudget))
     }
   }
@@ -53,18 +54,19 @@ class MovieService {
     val movieList = moviesDetails.filter(movie => {
       movie.country.toLowerCase().contains(country.toLowerCase()) && movie.votes >= vote
     })
-    val sortedMovieListBaseOnDuration = movieList sortWith (_.duration > _.duration)
-    if (sortedMovieListBaseOnDuration == null || sortedMovieListBaseOnDuration.isEmpty) {
+
+    if (movieList == null || movieList.isEmpty) {
       println("No match data found")
     } else {
-      sortedMovieListBaseOnDuration.foreach(println)
+      movieList.sortBy(_.duration).reverse
+        .foreach(println)
     }
   }
 
   def generateLanguageWiseReportToCountForBudgetRange(startBudgetRange: Long, endBudgetRange: Long,country:String) {
     var budgetMovieMap = mutable.Map[String, Int]()
     for (movie <- moviesDetails) {
-      if ( movie.country.equalsIgnoreCase(country) && movie.budget.toString.toLong  > startBudgetRange && movie.budget.toString.toLong  <= endBudgetRange ) {
+      if ( movie.country.equalsIgnoreCase(country) && movie.budget.toString.toLong  >= startBudgetRange && movie.budget.toString.toLong  <= endBudgetRange ) {
         if (budgetMovieMap.contains(movie.language)) {
           budgetMovieMap += (movie.language -> (budgetMovieMap(movie.language) + 1))
         } else {
